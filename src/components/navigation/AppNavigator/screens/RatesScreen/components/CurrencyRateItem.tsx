@@ -8,7 +8,7 @@ import { HexColor } from '../../../../../../constants/colors.ts';
 import { CurrencyItemChart } from './CurrencyItemChart.tsx';
 import { AppText } from '../../../../../common/AppText/AppText.tsx';
 import { CnbCurrencyEntry } from '../../../../../../networking/exchange-rates/types.ts';
-import { cnbCountryNameToFlagEmojiMap } from '../../../../../../networking/exchange-rates/constants.ts';
+import { currencyCodeToFlagEmojiMap } from '../../../../../../networking/exchange-rates/constants.ts';
 import { AppTextStatus } from '../../../../../common/AppText/types.ts';
 import { View } from 'react-native';
 import { LucideIcon, Star, StarOff } from 'lucide-react-native';
@@ -46,7 +46,7 @@ const _CurrencyRateItem = ({
     suffix: ' CZK',
   });
 
-  const flagEmoji = cnbCountryNameToFlagEmojiMap[countryName];
+  const flagEmoji = currencyCodeToFlagEmojiMap[currencyCode];
 
   const FavoriteIcon: LucideIcon = !isFavorite ? StarOff : Star;
 

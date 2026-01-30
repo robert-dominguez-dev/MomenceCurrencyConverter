@@ -1,8 +1,8 @@
-import { CnbCountryName, CnbCurrencyCode } from './constants.ts';
+import { CnbCurrencyCode } from './constants.ts';
 
 export type CnbCurrencyEntry = {
-  countryName: CnbCountryName;
   currencyCode: CnbCurrencyCode;
   currencyName: string;
+  countryName: string;
   czkRateTrendValues: number[];
 };
