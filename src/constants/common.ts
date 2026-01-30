@@ -16,3 +16,9 @@ export enum AppTheme {
 }
 
 export const DASH = '-';
+export const PIPE = '|';
+export const DOT = '.';
+
+export const ONE_HOUR_IN_MS = 3_600_000;
+
+export const LINE_BREAK_SEPARATOR = '\n';

@@ -7,11 +7,14 @@ import { AppSize, DASH } from '../../../../../../constants/common.ts';
 import { HexColor } from '../../../../../../constants/colors.ts';
 import { CurrencyItemChart } from './CurrencyItemChart.tsx';
 import { AppText } from '../../../../../common/AppText/AppText.tsx';
-import { CnbCurrencyEntry } from '../../../../../../networking/exchange-rates/types.ts';
-import { currencyCodeToFlagEmojiMap } from '../../../../../../networking/exchange-rates/constants.ts';
+
 import { AppTextStatus } from '../../../../../common/AppText/types.ts';
 import { View } from 'react-native';
 import { LucideIcon, Star, StarOff } from 'lucide-react-native';
+import { CnbCurrencyEntry } from '../../../../../../networking/useExchangeRates/types.ts';
+import { currencyCodeToFlagEmojiMap } from '../../../../../../networking/useExchangeRates/constants.ts';
+import { useExchangeRates } from '../../../../../../networking/useExchangeRates/useExchangeRates.ts';
+import { parenthesize } from '../../../../../../helpers/parenthesize.ts';
 
 type CurrencyRateItemProps = CnbCurrencyEntry & {
   deltaInfo: CurrencyRateDeltaInfo;
@@ -28,6 +31,8 @@ const _CurrencyRateItem = ({
   onPress,
   deltaInfo: { last: currentCzkRate, delta, deltaPercents, isBullish },
 }: CurrencyRateItemProps) => {
+  useExchangeRates();
+
   const { surface, border, accent, danger, icon } = useAppThemedColors();
 
   const trendColor: HexColor = isBullish ? accent : danger;
@@ -73,7 +78,7 @@ const _CurrencyRateItem = ({
           <AppText
             category={'caption'}
             status={'muted'}>
-            ({currencyName})
+            {parenthesize(currencyName)}
           </AppText>
         </View>
       </LeftStyled>

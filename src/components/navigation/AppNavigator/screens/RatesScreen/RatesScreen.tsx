@@ -2,12 +2,13 @@ import { ScreenProps } from '../../../types.ts';
 import { AppNavigatorScreen, AppNavigatorScreenParams } from '../../types.ts';
 import { AppScreenLayout } from '../../../../common/AppScreenLayout/AppScreenLayout.tsx';
 import { CurrencyRateItem } from './components/CurrencyRateItem.tsx';
-import { CnbCurrencyEntry } from '../../../../../networking/exchange-rates/types.ts';
-import { CnbCurrencyCode } from '../../../../../networking/exchange-rates/constants.ts';
+
 import { getCurrencyRateDeltaInfo } from './helpers/getCurrencyRateDeltaProps.ts';
 import { JSX } from 'react';
 import styled from 'styled-components/native';
 import { AppSize } from '../../../../../constants/common.ts';
+import { CnbCurrencyEntry } from '../../../../../networking/useExchangeRates/types.ts';
+import { CnbCurrencyCode } from '../../../../../networking/useExchangeRates/constants.ts';
 
 const entries: CnbCurrencyEntry[] = [
   {
@@ -51,6 +52,7 @@ export const RatesScreen = ({}: RatesScreenProps) => {
       const isFavorite = favorites.includes(entry.currencyCode);
       acc.push(
         <CurrencyRateItem
+          key={entry.currencyCode}
           {...entry}
           deltaInfo={deltaInfo}
           isFavorite={isFavorite}
