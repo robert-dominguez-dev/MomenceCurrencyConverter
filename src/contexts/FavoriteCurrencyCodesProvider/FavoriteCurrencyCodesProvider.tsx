@@ -3,7 +3,7 @@ import { ChildrenProp } from '../../types/common.ts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CnbCurrencyCode } from '../../networking/useExchangeRates/constants.ts';
 import { safeParseFavoriteCurrencyCodes } from './helpers/safeParseFavoriteCurrencyCodes.ts';
-import { addOrDeleteFavoriteCurrencyCode } from './helpers/addOrDeleteFavoriteCurrencyCode.ts';
+import { addOrRemoveFavoriteCurrencyCode } from './helpers/addOrRemoveFavoriteCurrencyCode.ts';
 
 const FAVORITE_CURRENCY_RATES_STORAGE_KEY = 'FAVORITE_CURRENCY_RATES';
 
@@ -32,7 +32,7 @@ export const FavoriteCurrencyCodesProvider = ({ children }: ChildrenProp) => {
 
   const toggleFavoriteCurrencyCode = (currencyCode: CnbCurrencyCode) =>
     setFavoriteCurrencyCodes(prev => {
-      const updatedCurrencyCodes = addOrDeleteFavoriteCurrencyCode(
+      const updatedCurrencyCodes = addOrRemoveFavoriteCurrencyCode(
         prev,
         currencyCode,
       );

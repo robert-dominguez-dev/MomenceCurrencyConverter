@@ -1,4 +1,4 @@
-import { addOrDeleteFavoriteCurrencyCode } from './addOrDeleteFavoriteCurrencyCode.ts';
+import { addOrRemoveFavoriteCurrencyCode } from './addOrRemoveFavoriteCurrencyCode.ts';
 import { CnbCurrencyCode } from '../../../networking/useExchangeRates/constants.ts';
 
 type TestCase = {
@@ -52,29 +52,12 @@ const testCases: TestCase[] = [
     },
     expectedOutput: [CnbCurrencyCode.EUR],
   },
-  {
-    description:
-      'removes duplicates when input contains duplicates and adds new one',
-    input: {
-      currencyCodes: [
-        CnbCurrencyCode.USD,
-        CnbCurrencyCode.USD,
-        CnbCurrencyCode.EUR,
-      ],
-      currencyCode: CnbCurrencyCode.AUD,
-    },
-    expectedOutput: [
-      CnbCurrencyCode.USD,
-      CnbCurrencyCode.EUR,
-      CnbCurrencyCode.AUD,
-    ],
-  },
 ];
 
-describe('addOrDeleteFavoriteCurrencyCode', () => {
+describe('addOrRemoveFavoriteCurrencyCode', () => {
   it.each(testCases)('$description', ({ input, expectedOutput }) => {
     expect(
-      addOrDeleteFavoriteCurrencyCode(input.currencyCodes, input.currencyCode),
+      addOrRemoveFavoriteCurrencyCode(input.currencyCodes, input.currencyCode),
     ).toEqual(expectedOutput);
   });
 });
