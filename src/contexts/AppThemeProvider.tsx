@@ -52,7 +52,9 @@ export const AppThemeProvider = ({ children }: ChildrenProp) => {
 export const useAppTheme = () => {
   const context = useContext(AppThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error(
+      `${useAppTheme.name} must be used within a ${AppThemeProvider.name}`,
+    );
   }
   return context;
 };

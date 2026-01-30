@@ -11,12 +11,16 @@ import { AppText } from '../../../../../common/AppText/AppText.tsx';
 import { AppTextStatus } from '../../../../../common/AppText/types.ts';
 import { LucideIcon, Star, StarOff } from 'lucide-react-native';
 import { CnbCurrencyEntry } from '../../../../../../networking/useExchangeRates/types.ts';
-import { currencyCodeToFlagEmojiMap } from '../../../../../../networking/useExchangeRates/constants.ts';
+import {
+  CnbCurrencyCode,
+  currencyCodeToFlagEmojiMap,
+} from '../../../../../../networking/useExchangeRates/constants.ts';
 import { View } from 'react-native';
 
-type CurrencyRateItemProps = CnbCurrencyEntry & {
+export type CurrencyRateItemProps = CnbCurrencyEntry & {
   deltaInfo: CurrencyRateDeltaInfo;
   isFavorite: boolean;
+  onToggleFavorite: (currencyCode: CnbCurrencyCode) => void;
   onPress?: () => void;
 };
 
@@ -26,6 +30,7 @@ const _CurrencyRateItem = ({
   czkRateTrendValues,
   isFavorite,
   onPress,
+  onToggleFavorite,
   deltaInfo: {
     last: currentCzkRate,
     delta,
@@ -55,7 +60,9 @@ const _CurrencyRateItem = ({
 
   const flagEmoji = currencyCodeToFlagEmojiMap[currencyCode];
 
-  const FavoriteIcon: LucideIcon = !isFavorite ? StarOff : Star;
+  const FavoriteIcon: LucideIcon = isFavorite ? StarOff : Star;
+
+  const handleFavoriteIconPress = () => onToggleFavorite(currencyCode);
 
   return (
     <ItemWrapperStyled
@@ -94,6 +101,7 @@ const _CurrencyRateItem = ({
         </AppText>
       </RightStyled>
       <FavoriteIcon
+        onPress={handleFavoriteIconPress}
         size={AppSize.ml}
         color={icon}
       />

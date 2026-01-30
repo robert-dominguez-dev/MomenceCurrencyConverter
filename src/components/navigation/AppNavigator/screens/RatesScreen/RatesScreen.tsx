@@ -4,7 +4,7 @@ import { AppScreenLayout } from '../../../../common/AppScreenLayout/AppScreenLay
 import { useExchangeRates } from '../../../../../networking/useExchangeRates/useExchangeRates.ts';
 import { AppQueryResolver } from '../../../../common/AppQueryResolver/AppQueryResolver.tsx';
 import { CnbCurrencyEntry } from '../../../../../networking/useExchangeRates/types.ts';
-import { CurrencyRateList } from './components/CurrencyRateList.tsx';
+import { CurrencyRateContent } from './components/CurrencyRateContent.tsx';
 
 type RatesScreenProps = ScreenProps<
   AppNavigatorScreenParams,
@@ -15,7 +15,7 @@ export const RatesScreen = ({}: RatesScreenProps) => {
   const { data, isPending, error } = useExchangeRates();
 
   const renderContent = (entries: CnbCurrencyEntry[]) => (
-    <CurrencyRateList entries={entries} />
+    <CurrencyRateContent entries={entries} />
   );
 
   return (
