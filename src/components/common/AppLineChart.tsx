@@ -1,7 +1,22 @@
 import React, { memo } from 'react';
-import { LineChart, LineChartPropsType } from 'react-native-gifted-charts';
+import {
+  LineChart,
+  LineChartPropsType,
+  Pointer,
+} from 'react-native-gifted-charts';
+import { appColorsDark } from '../../constants/colors.ts';
 
-type AppLineChartProps = Pick<
+const pointerConfig: Pointer = {
+  pointerStripHeight: 0,
+  pointerStripWidth: 0,
+  pointerColor: 'transparent',
+  pointerStripColor: 'transparent',
+  radius: 0,
+  pointerLabelWidth: 0,
+  pointerLabelHeight: 0,
+};
+
+export type AppLineChartProps = Pick<
   LineChartPropsType,
   'data' | 'width' | 'height' | 'thickness'
 > & {
@@ -11,9 +26,9 @@ type AppLineChartProps = Pick<
 const _AppLineChart = ({
   data,
   color,
-  width = 92,
-  height = 28,
-  thickness = 2,
+  width,
+  height,
+  thickness,
 }: AppLineChartProps) => (
   <LineChart
     data={data}
@@ -23,7 +38,13 @@ const _AppLineChart = ({
     hideAxesAndRules
     hideYAxisText
     hideRules
+    hideOrigin
     thickness={thickness}
+    areaChart
+    startFillColor={color}
+    endFillColor={appColorsDark.transparent}
+    startOpacity={0.22}
+    endOpacity={0}
     curved
     curveType={1}
     color={color}
@@ -36,7 +57,7 @@ const _AppLineChart = ({
     showVerticalLines={false}
     showXAxisIndices={false}
     showYAxisIndices={false}
-    pointerConfig={{ pointerStripHeight: 0 }}
+    pointerConfig={pointerConfig}
   />
 );
 

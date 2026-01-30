@@ -11,9 +11,9 @@ export const AppScreenFooterWrapper = ({ children }: ChildrenProp) => {
   );
 };
 
-type FooterStyleProps = { $borderColor: string };
+type FooterWrapperStyledProps = { $borderColor: string };
 
-const FooterWrapperStyled = styled.View<FooterStyleProps>`
+const FooterWrapperStyled = styled.View<FooterWrapperStyledProps>`
   padding: ${AppSize.s}px ${AppSize.m}px ${AppSize.m}px ${AppSize.m}px;
   border-top-width: 1px;
   border-top-color: ${({ $borderColor }) => $borderColor};

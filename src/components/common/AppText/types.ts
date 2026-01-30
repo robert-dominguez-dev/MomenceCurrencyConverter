@@ -7,7 +7,12 @@ export type AppTextStatus =
   | 'warning'
   | 'danger';
 
-export type AppTextCategory = 'title' | 'subtitle' | 'body' | 'caption';
+export type AppTextCategory =
+  | 'heading'
+  | 'title'
+  | 'subtitle'
+  | 'body'
+  | 'caption';
 
 export type AppTextConfig = Required<
   Pick<

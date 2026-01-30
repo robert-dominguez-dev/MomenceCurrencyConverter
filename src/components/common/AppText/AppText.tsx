@@ -31,13 +31,13 @@ export const AppText = ({
   );
 };
 
-type BaseTextStyleProps = { $color: string; $preset: AppTextConfig };
+type BaseTextStyledProps = { $color: string; $preset: AppTextConfig };
 
-const BaseTextStyled = styled.Text<BaseTextStyleProps>`
+const BaseTextStyled = styled.Text<BaseTextStyledProps>`
   color: ${({ $color }) => $color};
   font-size: ${({ $preset }) => $preset.fontSize}px;
   font-weight: ${({ $preset }) => $preset.fontWeight};
   line-height: ${({ $preset }) => $preset.lineHeight}px;
   font-family: ${({ $preset }) => $preset.fontFamily};
-  letter-spacing: ${({ $preset }) => $preset.letterSpacing};
+  letter-spacing: ${({ $preset }) => $preset.letterSpacing}px;
 `;
