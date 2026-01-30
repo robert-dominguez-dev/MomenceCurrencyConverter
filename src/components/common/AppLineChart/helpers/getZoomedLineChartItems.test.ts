@@ -1,8 +1,8 @@
-import { getZoomedYAxis, GetZoomedYAxisParams } from './getZoomedYAxis.ts';
+import { getZoomedLineChartItems, GetZoomedLineChartItemsParams } from './getZoomedLineChartItems.ts';
 
 type TestCase = {
   description: string;
-  input: GetZoomedYAxisParams;
+  input: GetZoomedLineChartItemsParams;
   expectedOutput: Array<{ value: number }>;
 };
 
@@ -44,8 +44,8 @@ const testCases: TestCase[] = [
   },
 ];
 
-describe('getZoomedYAxis', () => {
+describe('getZoomedLineChartItems', () => {
   it.each(testCases)('$description', ({ input, expectedOutput }) => {
-    expect(getZoomedYAxis(input)).toEqual(expectedOutput);
+    expect(getZoomedLineChartItems(input)).toEqual(expectedOutput);
   });
 });

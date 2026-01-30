@@ -3,17 +3,17 @@ import {
 } from '../../../navigation/AppNavigator/screens/RatesScreen/helpers/getCurrencyRateDeltaProps.ts';
 import { AppLineChartItem } from '../types.ts';
 
-export type GetZoomedYAxisParams = Pick<
+export type GetZoomedLineChartItemsParams = Pick<
   CurrencyRateDeltaInfo,
   'minValue' | 'maxValue'
 > & { items: AppLineChartItem[]; zoomIntensity?: number };
 
-export const getZoomedYAxis = ({
+export const getZoomedLineChartItems = ({
   items,
   minValue,
   maxValue,
   zoomIntensity = 1,
-}: GetZoomedYAxisParams) => {
+}: GetZoomedLineChartItemsParams) => {
   const range: number = maxValue - minValue || 1;
 
   /**

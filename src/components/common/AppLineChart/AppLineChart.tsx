@@ -7,9 +7,9 @@ import {
 import { appColorsDark } from '../../../constants/colors.ts';
 import { AppLineChartItem } from './types.ts';
 import {
-  getZoomedYAxis,
-  GetZoomedYAxisParams,
-} from './helpers/getZoomedYAxis.ts';
+  getZoomedLineChartItems,
+  GetZoomedLineChartItemsParams,
+} from './helpers/getZoomedLineChartItems.ts';
 
 const pointerConfig: Pointer = {
   pointerStripHeight: 0,
@@ -25,7 +25,7 @@ export type AppLineChartProps = Pick<
   LineChartPropsType,
   'width' | 'height' | 'thickness'
 > &
-  Pick<GetZoomedYAxisParams, 'minValue' | 'maxValue'> & {
+  Pick<GetZoomedLineChartItemsParams, 'minValue' | 'maxValue'> & {
     color: string;
     items: AppLineChartItem[];
   };
@@ -40,7 +40,7 @@ const _AppLineChart = ({
   maxValue,
 }: AppLineChartProps) => {
   const zoomedItems = useMemo(
-    () => getZoomedYAxis({ items, minValue, maxValue }),
+    () => getZoomedLineChartItems({ items, minValue, maxValue }),
     [items, minValue, maxValue],
   );
 
