@@ -9,12 +9,10 @@ import { CurrencyItemChart } from './CurrencyItemChart.tsx';
 import { AppText } from '../../../../../common/AppText/AppText.tsx';
 
 import { AppTextStatus } from '../../../../../common/AppText/types.ts';
-import { View } from 'react-native';
 import { LucideIcon, Star, StarOff } from 'lucide-react-native';
 import { CnbCurrencyEntry } from '../../../../../../networking/useExchangeRates/types.ts';
 import { currencyCodeToFlagEmojiMap } from '../../../../../../networking/useExchangeRates/constants.ts';
-import { useExchangeRates } from '../../../../../../networking/useExchangeRates/useExchangeRates.ts';
-import { parenthesize } from '../../../../../../helpers/parenthesize.ts';
+import { View } from 'react-native';
 
 type CurrencyRateItemProps = CnbCurrencyEntry & {
   deltaInfo: CurrencyRateDeltaInfo;
@@ -24,15 +22,19 @@ type CurrencyRateItemProps = CnbCurrencyEntry & {
 
 const _CurrencyRateItem = ({
   currencyCode,
-  countryName,
   currencyName,
   czkRateTrendValues,
   isFavorite,
   onPress,
-  deltaInfo: { last: currentCzkRate, delta, deltaPercents, isBullish },
+  deltaInfo: {
+    last: currentCzkRate,
+    delta,
+    deltaPercents,
+    isBullish,
+    minValue,
+    maxValue,
+  },
 }: CurrencyRateItemProps) => {
-  useExchangeRates();
-
   const { surface, border, accent, danger, icon } = useAppThemedColors();
 
   const trendColor: HexColor = isBullish ? accent : danger;
@@ -73,18 +75,15 @@ const _CurrencyRateItem = ({
           <AppText
             category={'caption'}
             status={'muted'}>
-            {countryName}
-          </AppText>
-          <AppText
-            category={'caption'}
-            status={'muted'}>
-            {parenthesize(currencyName)}
+            {currencyName}
           </AppText>
         </View>
       </LeftStyled>
       <CurrencyItemChart
         czkRateTrendValues={czkRateTrendValues}
         trendColor={trendColor}
+        minValue={minValue}
+        maxValue={maxValue}
       />
       <RightStyled>
         <AppText category={'subtitle'}>{currentCzkRateFormatted}</AppText>

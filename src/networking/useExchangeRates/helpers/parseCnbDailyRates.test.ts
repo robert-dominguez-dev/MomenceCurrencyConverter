@@ -1,17 +1,13 @@
 import { parseCnbDailyRates } from './parseCnbDailyRates.ts';
+import { CnbCurrencyCode } from '../constants.ts';
+import { CnbDailyRatesInfo } from '../types.ts';
 
 type TestCase = {
   description: string;
   input: { txt: string };
   expectedOutput: {
     dateLine: string;
-    rows: Array<{
-      country: string;
-      currency: string;
-      amount: number;
-      code: string;
-      rate: number;
-    }>;
+    rows: CnbDailyRatesInfo[];
   };
 };
 
@@ -30,25 +26,22 @@ USA|dollar|1|USD|20.345
       dateLine: '29 Jan 2026 #20',
       rows: [
         {
-          country: 'Australia',
-          currency: 'dollar',
-          amount: 1,
-          code: 'AUD',
-          rate: 14.368,
+          countryName: 'Australia',
+          currencyName: 'dollar',
+          currencyCode: CnbCurrencyCode.AUD,
+          czkRate: 14.368,
         },
         {
-          country: 'Hungary',
-          currency: 'forint',
-          amount: 100,
-          code: 'HUF',
-          rate: 6.389,
+          countryName: 'Hungary',
+          currencyName: 'forint',
+          currencyCode: CnbCurrencyCode.HUF,
+          czkRate: 6.389,
         },
         {
-          country: 'USA',
-          currency: 'dollar',
-          amount: 1,
-          code: 'USD',
-          rate: 20.345,
+          countryName: 'USA',
+          currencyName: 'dollar',
+          currencyCode: CnbCurrencyCode.USD,
+          czkRate: 20.345,
         },
       ],
     },
@@ -69,18 +62,16 @@ USA|dollar|1|USD|20.345
       dateLine: '29 Jan 2026 #20',
       rows: [
         {
-          country: 'Australia',
-          currency: 'dollar',
-          amount: 1,
-          code: 'AUD',
-          rate: 14.368,
+          countryName: 'Australia',
+          currencyName: 'dollar',
+          currencyCode: CnbCurrencyCode.AUD,
+          czkRate: 14.368,
         },
         {
-          country: 'USA',
-          currency: 'dollar',
-          amount: 1,
-          code: 'USD',
-          rate: 20.345,
+          countryName: 'USA',
+          currencyName: 'dollar',
+          currencyCode: CnbCurrencyCode.USD,
+          czkRate: 20.345,
         },
       ],
     },

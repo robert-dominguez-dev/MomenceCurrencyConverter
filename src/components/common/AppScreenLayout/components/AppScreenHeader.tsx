@@ -19,7 +19,7 @@ export const AppScreenHeader = ({
     <HeaderCenterStyled>
       <AppText
         numberOfLines={1}
-        category={'title'}>
+        category={'heading'}>
         {children}
       </AppText>
     </HeaderCenterStyled>

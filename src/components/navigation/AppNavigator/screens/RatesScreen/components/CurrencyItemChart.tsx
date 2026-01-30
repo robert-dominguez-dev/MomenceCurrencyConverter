@@ -2,20 +2,25 @@ import React, { memo } from 'react';
 import {
   AppLineChart,
   AppLineChartProps,
-} from '../../../../../common/AppLineChart.tsx';
-import { CnbCurrencyEntry } from '../../../../../../networking/exchange-rates/types.ts';
+} from '../../../../../common/AppLineChart/AppLineChart.tsx';
+
 import { useLayout } from '../../../../../../hooks/useLayout.ts';
 import styled from 'styled-components/native';
+import { CnbCurrencyEntry } from '../../../../../../networking/useExchangeRates/types.ts';
 
-export type CurrencyItemChartProps = Pick<AppLineChartProps, 'data'> &
+export type CurrencyItemChartProps = Pick<
+  AppLineChartProps,
+  'minValue' | 'maxValue'
+> &
   Pick<CnbCurrencyEntry, 'czkRateTrendValues'> & {
-    czkRateTrendValues: number[];
     trendColor: string;
   };
 
 const _CurrencyItemChart = ({
   czkRateTrendValues,
   trendColor,
+  minValue,
+  maxValue,
 }: CurrencyItemChartProps) => {
   const { handleLayout, layout } = useLayout();
 
@@ -24,10 +29,12 @@ const _CurrencyItemChart = ({
   return (
     <ChartWrapperStyled onLayout={handleLayout}>
       <AppLineChart
-        data={data}
+        items={data}
         color={trendColor}
-        height={48}
+        minValue={minValue}
+        maxValue={maxValue}
         width={layout?.width}
+        height={48}
         thickness={2}
       />
     </ChartWrapperStyled>

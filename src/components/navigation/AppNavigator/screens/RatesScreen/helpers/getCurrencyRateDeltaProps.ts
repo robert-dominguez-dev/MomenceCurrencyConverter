@@ -3,6 +3,8 @@ import { checkIsValidNumber } from '../../../../../../helpers/checkIsValidNumber
 export type CurrencyRateDeltaInfo = {
   first: number;
   last: number;
+  minValue: number;
+  maxValue: number;
   delta: number;
   deltaPercents: number;
   isBullish: boolean;
@@ -21,6 +23,9 @@ export const getCurrencyRateDeltaInfo = (
     return undefined;
   }
 
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+
   const delta = last - first;
   const deltaPercents: number = first === 0 ? 0 : (delta / first) * 100;
   const isBullish = delta >= 0;
@@ -28,6 +33,8 @@ export const getCurrencyRateDeltaInfo = (
   return {
     first,
     last,
+    minValue,
+    maxValue,
     delta,
     deltaPercents,
     isBullish,

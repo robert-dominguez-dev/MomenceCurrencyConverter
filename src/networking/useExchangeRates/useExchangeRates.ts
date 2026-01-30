@@ -3,16 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { ONE_HOUR_IN_MS } from '../../constants/common.ts';
 import { CnbCurrencyEntry } from './types.ts';
 import { getYearsForLastDays } from '../../helpers/getYearsForLastDays.ts';
-import { parseCnbDailyRates } from './helpers/parseCnbDailyRates.ts';
-import { parseCnbYearRates } from './helpers/parseCnbYearRates.ts';
+import { WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS } from './constants.ts';
+import { composeCnbCurrencyRateEntries } from './helpers/composeCnbCurrencyRateEntries.ts';
 
 const CNB_BASE_URI =
   'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing';
 
 const CNB_DAILY_URI = `${CNB_BASE_URI}/daily.txt`;
 const CNB_YEAR_URI = `${CNB_BASE_URI}/year.txt`;
-
-const EXCHANGE_RATES_HISTORY_IN_DAYS = 90;
 
 const fetchCnbDaily = async (): Promise<string> => {
   const { data } = await axiosInstance.get<string>(CNB_DAILY_URI, {
@@ -30,27 +28,33 @@ const fetchCnbYear = async (year: number): Promise<string> => {
 };
 
 const fetchAndProcessCnbData = async (
-  years: number[],
+  yearsFromOldest: number[],
 ): Promise<CnbCurrencyEntry[]> => {
-  const dailyTextPromise = fetchCnbDaily();
-  const yearlyTextPromises = years.map(year => fetchCnbYear(year));
+  const dailyCurrencyRatesDataPromise = fetchCnbDaily();
+  const yearlyCurrencyRatesDataPromises = yearsFromOldest.map(year =>
+    fetchCnbYear(year),
+  );
 
-  const [dailyText, ...yearlyTexts] = await Promise.all([
-    dailyTextPromise,
-    ...yearlyTextPromises,
-  ]);
-  console.log(parseCnbDailyRates(dailyText));
-  console.log(yearlyTexts.map(parseCnbYearRates));
-  const entries: CnbCurrencyEntry[] = [];
-  return entries;
+  const [dailyCurrencyRatesDataString, ...yearlyCurrencyRatesDataStrings] =
+    await Promise.all([
+      dailyCurrencyRatesDataPromise,
+      ...yearlyCurrencyRatesDataPromises,
+    ]);
+
+  return composeCnbCurrencyRateEntries({
+    dailyCurrencyRatesDataString,
+    yearlyCurrencyRatesDataStrings,
+  });
 };
 
 export const useExchangeRates = () => {
-  const years = getYearsForLastDays(EXCHANGE_RATES_HISTORY_IN_DAYS);
+  const yearsFromOldest = getYearsForLastDays(
+    WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS,
+  );
 
   const { data, isPending, error } = useQuery({
-    queryKey: ['cnb', 'rates', ...years],
-    queryFn: () => fetchAndProcessCnbData(years),
+    queryKey: ['cnb', 'rates', ...yearsFromOldest],
+    queryFn: () => fetchAndProcessCnbData(yearsFromOldest),
     staleTime: ONE_HOUR_IN_MS,
     gcTime: ONE_HOUR_IN_MS,
   });

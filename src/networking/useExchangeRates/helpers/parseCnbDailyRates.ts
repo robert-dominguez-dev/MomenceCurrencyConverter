@@ -1,8 +1,10 @@
 import Papa from 'papaparse';
 import { LINE_BREAK_SEPARATOR, PIPE } from '../../../constants/common.ts';
 import { getNumber } from '../../../helpers/getNumber.ts';
+import { checkIsCnbCurrencyCode } from '../../../helpers/checkIsCnbCurrencyCode.ts';
+import { CnbDailyRatesInfo } from '../types.ts';
 
-export type CnbDailyRatesRow = {
+type CnbDailyRatesRow = {
   Country: string;
   Currency: string;
   Amount: string;
@@ -11,7 +13,7 @@ export type CnbDailyRatesRow = {
 };
 
 export const parseCnbDailyRates = (txt: string) => {
-  const [dateLine, ...rest] = txt.split(LINE_BREAK_SEPARATOR);
+  const [_dateLine, ...rest] = txt.split(LINE_BREAK_SEPARATOR);
 
   const parsed = Papa.parse<CnbDailyRatesRow>(rest.join(LINE_BREAK_SEPARATOR), {
     header: true,
@@ -23,13 +25,32 @@ export const parseCnbDailyRates = (txt: string) => {
     throw new Error(parsed.errors.map(e => e.message).join('; '));
   }
 
-  const rows = parsed.data.map(r => ({
-    country: r.Country,
-    currency: r.Currency,
-    amount: getNumber(r.Amount),
-    code: r.Code,
-    rate: getNumber(r.Rate),
-  }));
+  return parsed.data.reduce<CnbDailyRatesInfo[]>(
+    (
+      acc,
+      {
+        Country: countryName,
+        Currency: currencyName,
+        Amount: amount,
+        Code: currencyCode,
+        Rate: rate,
+      },
+    ) => {
+      const isCnbCurrencyCode = checkIsCnbCurrencyCode(currencyCode);
 
-  return { dateLine: dateLine.trim(), rows };
+      const czkRate = getNumber(rate) / getNumber(amount);
+
+      if (isCnbCurrencyCode) {
+        acc.push({
+          currencyCode,
+          currencyName,
+          countryName,
+          czkRate,
+        });
+      }
+
+      return acc;
+    },
+    [],
+  );
 };

@@ -1,3 +1,11 @@
+/**
+ * Based on {@link https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/}
+ */
+export const CNB_DATE_FORMAT = 'dd.MM.yyyy';
+
+/**
+ * Based on {@link https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/}
+ */
 export enum CnbCurrencyCode {
   AUD = 'AUD',
   BRL = 'BRL',
@@ -63,3 +71,5 @@ export const currencyCodeToFlagEmojiMap: Record<CnbCurrencyCode, string> = {
   [CnbCurrencyCode.GBP]: '🇬🇧',
   [CnbCurrencyCode.USD]: '🇺🇸',
 };
+
+export const WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS = 90;

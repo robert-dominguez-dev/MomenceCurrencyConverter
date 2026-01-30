@@ -1,15 +1,17 @@
 import Papa from 'papaparse';
-import { parse } from 'date-fns';
+import { isAfter, isValid, parse } from 'date-fns';
 import { PIPE } from '../../../constants/common.ts';
-import { getNumber } from '../../../helpers/getNumber.ts';
+import { CNB_DATE_FORMAT, WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS, } from '../constants.ts';
+import { getDateBeforeDays } from '../../../helpers/getDateBeforeDays.ts';
+import { composeCnbCurrencyCodeAmountMapFromRawMap } from './composeCnbCurrencyCodeAmountMapFromRawMap.ts';
+import { CnbYearRatesInfo } from '../types.ts';
 
-export type CnbYearRatesRow = {
-  date: Date;
-  ratesByCode: Record<string, number>;
-};
+/**
+ * Based on {@link https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/}
+ */
+const DATE_FIELD_NAME = 'Date';
 
-// TODO: Refactor
-export const parseCnbYearRates = (text: string): CnbYearRatesRow[] => {
+export const parseCnbYearRates = (text: string) => {
   const parsed = Papa.parse<Record<string, string>>(text, {
     header: true,
     delimiter: PIPE,
@@ -20,32 +22,28 @@ export const parseCnbYearRates = (text: string): CnbYearRatesRow[] => {
     throw new Error(parsed.errors.map(error => error.message).join('; '));
   }
 
-  const headerFields = (parsed.meta.fields ?? []).map(field => field.trim());
+  const startDate = getDateBeforeDays(
+    WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS,
+  );
 
-  const amountByCurrencyCode = Object.fromEntries(
-    headerFields
-      .filter(field => field !== 'Date')
-      .map(field => {
-        const [amountString, currencyCode] = field.split(' ');
-        return [currencyCode, Number(amountString)];
-      }),
-  ) as Record<string, number>;
+  return parsed.data
+    .reduce<CnbYearRatesInfo[]>(
+      (acc, { [DATE_FIELD_NAME]: dateString, ...rawCurrencyAmountMap }) => {
+        const date = parse(dateString, CNB_DATE_FORMAT, new Date());
 
-  return parsed.data.map(row => {
-    const dateString = String(row['Date']).trim();
-    const date = parse(dateString, 'dd.MM.yyyy', new Date());
+        const isAfterStartDate: boolean =
+          isValid(date) && isAfter(date, startDate);
 
-    const ratesByCode = Object.fromEntries(
-      Object.entries(row)
-        .filter(([columnName]) => columnName !== 'Date')
-        .map(([columnName, valueString]) => {
-          const [, currencyCode] = columnName.trim().split(' ');
-          const amount = amountByCurrencyCode[currencyCode] ?? 1;
-          const value = getNumber(valueString);
-          return [currencyCode, value / amount];
-        }),
-    ) as Record<string, number>;
+        if (isAfterStartDate) {
+          const ratesByCode =
+            composeCnbCurrencyCodeAmountMapFromRawMap(rawCurrencyAmountMap);
 
-    return { date, ratesByCode };
-  });
+          acc.push({ date, ratesByCode });
+        }
+
+        return acc;
+      },
+      [],
+    )
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
 };

@@ -18,6 +18,9 @@ export enum AppTheme {
 export const DASH = '-';
 export const PIPE = '|';
 export const DOT = '.';
+export const EMPTY_SPACE = ' ';
+
+export const EMPTY_SPACES_REGEXP = /\s+/;
 
 export const ONE_HOUR_IN_MS = 3_600_000;
 

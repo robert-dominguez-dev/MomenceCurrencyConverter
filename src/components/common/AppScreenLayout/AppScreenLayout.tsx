@@ -10,6 +10,8 @@ import {
 import { AppScreenFooterWrapper } from './components/AppScreenFooterWrapper.tsx';
 import { useAppThemedColors } from '../../../hooks/useAppThemedColors.ts';
 
+const contentContainerStyle: ViewStyle = { minHeight: '100%' };
+
 type AppScreenLayoutProps = AppScreenHeaderProps & {
   title: string;
   footer?: ReactNode;
@@ -50,7 +52,9 @@ export const AppScreenLayout = ({
         headerRight={headerRight}>
         {title}
       </AppScreenHeader>
-      <ContentStyled>{children}</ContentStyled>
+      <ContentStyled contentContainerStyle={contentContainerStyle}>
+        {children}
+      </ContentStyled>
       {!!footer && <AppScreenFooterWrapper>{footer}</AppScreenFooterWrapper>}
     </View>
   );
