@@ -31,33 +31,35 @@ const _AppLineChart = ({
   thickness,
 }: AppLineChartProps) => (
   <LineChart
-    data={data}
-    width={width}
-    height={height}
     hideDataPoints
     hideAxesAndRules
     hideYAxisText
     hideRules
     hideOrigin
-    thickness={thickness}
-    areaChart
-    startFillColor={color}
-    endFillColor={appColorsDark.transparent}
-    startOpacity={0.22}
-    endOpacity={0}
-    curved
-    curveType={1}
-    color={color}
-    yAxisThickness={0}
-    xAxisThickness={0}
     adjustToWidth
+    disableScroll
+    areaChart
+    curved
+    data={data}
+    width={width}
+    height={height}
+    thickness={thickness}
+    startFillColor={color}
+    pointerConfig={pointerConfig}
+    endFillColor={appColorsDark.transparent}
+    curveType={1}
+    startOpacity={0.25}
+    endOpacity={0}
+    color={color}
     initialSpacing={0}
     endSpacing={0}
-    disableScroll
+    yAxisThickness={0}
+    yAxisLabelWidth={0}
+    xAxisThickness={0}
+    xAxisLabelsHeight={0}
     showVerticalLines={false}
     showXAxisIndices={false}
     showYAxisIndices={false}
-    pointerConfig={pointerConfig}
   />
 );
 

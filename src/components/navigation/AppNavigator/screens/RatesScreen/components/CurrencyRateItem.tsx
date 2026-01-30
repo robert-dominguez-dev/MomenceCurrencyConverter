@@ -11,9 +11,11 @@ import { CnbCurrencyEntry } from '../../../../../../networking/exchange-rates/ty
 import { cnbCountryNameToFlagEmojiMap } from '../../../../../../networking/exchange-rates/constants.ts';
 import { AppTextStatus } from '../../../../../common/AppText/types.ts';
 import { View } from 'react-native';
+import { LucideIcon, Star, StarOff } from 'lucide-react-native';
 
 type CurrencyRateItemProps = CnbCurrencyEntry & {
   deltaInfo: CurrencyRateDeltaInfo;
+  isFavorite: boolean;
   onPress?: () => void;
 };
 
@@ -22,10 +24,11 @@ const _CurrencyRateItem = ({
   countryName,
   currencyName,
   czkRateTrendValues,
+  isFavorite,
   onPress,
   deltaInfo: { last: currentCzkRate, delta, deltaPercents, isBullish },
 }: CurrencyRateItemProps) => {
-  const { surface, border, accent, danger } = useAppThemedColors();
+  const { surface, border, accent, danger, icon } = useAppThemedColors();
 
   const trendColor: HexColor = isBullish ? accent : danger;
   const trendTextStatus: AppTextStatus = isBullish ? 'success' : 'danger';
@@ -45,15 +48,17 @@ const _CurrencyRateItem = ({
 
   const flagEmoji = cnbCountryNameToFlagEmojiMap[countryName];
 
+  const FavoriteIcon: LucideIcon = !isFavorite ? StarOff : Star;
+
   return (
     <ItemWrapperStyled
       onPress={onPress}
       $bgColor={surface}
       $borderColor={border}>
       <LeftStyled>
-        <FlagWrapStyled>
+        <FlagWrapperStyled>
           <AppText category={'heading'}>{flagEmoji}</AppText>
-        </FlagWrapStyled>
+        </FlagWrapperStyled>
         <View>
           <AppText
             category={'subtitle'}
@@ -84,6 +89,10 @@ const _CurrencyRateItem = ({
           {deltaFormatted} ({deltaPercentsFormatted})
         </AppText>
       </RightStyled>
+      <FavoriteIcon
+        size={AppSize.ml}
+        color={icon}
+      />
     </ItemWrapperStyled>
   );
 };
@@ -108,14 +117,12 @@ const ItemWrapperStyled = styled.Pressable<ItemWrapperStyledProps>`
 `;
 
 const LeftStyled = styled.View`
-  flex: 1;
-  flex-grow: 0;
   flex-direction: row;
   align-items: center;
   gap: ${AppSize.m}px;
 `;
 
-const FlagWrapStyled = styled.View`
+const FlagWrapperStyled = styled.View`
   width: ${AppSize.l}px;
   align-items: center;
   justify-content: center;

@@ -1,11 +1,11 @@
-import React, { memo, ReactNode } from 'react';
+import React, { memo } from 'react';
 import {
   AppLineChart,
   AppLineChartProps,
 } from '../../../../../common/AppLineChart.tsx';
 import { CnbCurrencyEntry } from '../../../../../../networking/exchange-rates/types.ts';
-import styled from 'styled-components/native';
 import { useLayout } from '../../../../../../hooks/useLayout.ts';
+import styled from 'styled-components/native';
 
 export type CurrencyItemChartProps = Pick<AppLineChartProps, 'data'> &
   Pick<CnbCurrencyEntry, 'czkRateTrendValues'> & {
@@ -21,26 +21,21 @@ const _CurrencyItemChart = ({
 
   const data = czkRateTrendValues.map(value => ({ value }));
 
-  const shouldRenderChart = (!!layout &&
-    layout.width > 0 &&
-    layout.height > 0) satisfies boolean;
-  console.log(layout);
-  const maybeChartElement: ReactNode = shouldRenderChart ? (
-    <AppLineChart
-      data={data}
-      color={trendColor}
-      width={layout.width}
-      height={layout.height}
-      thickness={2}
-    />
-  ) : null;
-
-  return <Wrap onLayout={handleLayout}>{maybeChartElement}</Wrap>;
+  return (
+    <ChartWrapperStyled onLayout={handleLayout}>
+      <AppLineChart
+        data={data}
+        color={trendColor}
+        height={48}
+        width={layout?.width}
+        thickness={2}
+      />
+    </ChartWrapperStyled>
+  );
 };
 
 export const CurrencyItemChart = memo(_CurrencyItemChart);
 
-const Wrap = styled.View`
+const ChartWrapperStyled = styled.View`
   flex: 1;
-  height: 56;
 `;
