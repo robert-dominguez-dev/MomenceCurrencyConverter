@@ -1,11 +1,6 @@
 import { TextStyle } from 'react-native';
 
-export type AppTextStatus =
-  | 'default'
-  | 'muted'
-  | 'success'
-  | 'warning'
-  | 'danger';
+export type AppTextStatus = 'default' | 'muted' | 'success' | 'danger';
 
 export type AppTextCategory =
   | 'heading'

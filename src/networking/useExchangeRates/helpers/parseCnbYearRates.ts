@@ -1,10 +1,11 @@
 import Papa from 'papaparse';
-import { isAfter, isValid, parse } from 'date-fns';
+import { isAfter, isValid } from 'date-fns';
 import { PIPE } from '../../../constants/common.ts';
-import { CNB_DATE_FORMAT, WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS, } from '../constants.ts';
+import { WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS, } from '../constants.ts';
 import { getDateBeforeDays } from '../../../helpers/getDateBeforeDays.ts';
 import { composeCnbCurrencyCodeAmountMapFromRawMap } from './composeCnbCurrencyCodeAmountMapFromRawMap.ts';
 import { CnbYearRatesInfo } from '../types.ts';
+import { parseCnbDate } from './parseCnbDate.ts';
 
 /**
  * Based on {@link https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/}
@@ -29,7 +30,7 @@ export const parseCnbYearRates = (text: string) => {
   return parsed.data
     .reduce<CnbYearRatesInfo[]>(
       (acc, { [DATE_FIELD_NAME]: dateString, ...rawCurrencyAmountMap }) => {
-        const date = parse(dateString, CNB_DATE_FORMAT, new Date());
+        const date = parseCnbDate(dateString);
 
         const isAfterStartDate: boolean =
           isValid(date) && isAfter(date, startDate);

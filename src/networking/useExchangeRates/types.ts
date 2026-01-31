@@ -20,3 +20,8 @@ export type CnbYearRatesInfo = {
   date: Date;
   ratesByCode: CnbCurrencyCodeAmountMap;
 };
+
+export type CnbExchangeRatesInfo = {
+  latestCnbRateEffectiveDate: Date;
+  entries: CnbCurrencyEntry[];
+};

@@ -8,6 +8,7 @@ import {
 } from './components/AppScreenHeader.tsx';
 import { AppScreenFooterWrapper } from './components/AppScreenFooterWrapper.tsx';
 import { useAppThemedColors } from '../../../hooks/useAppThemedColors.ts';
+import { ChildrenProp } from '../../../types/common.ts';
 
 const contentStyle: ViewStyle = {
   flex: 1,
@@ -19,14 +20,15 @@ const contentContainerStyle: ViewStyle = {
   paddingBottom: AppSize.m,
 };
 
-type AppScreenLayoutProps = AppScreenHeaderProps & {
-  title: string;
-  footer?: ReactNode;
-  shouldUseScrollView?: boolean;
-};
+type AppScreenLayoutProps = ChildrenProp &
+  AppScreenHeaderProps & {
+    footer?: ReactNode;
+    shouldUseScrollView?: boolean;
+  };
 
 export const AppScreenLayout = ({
   title,
+  subtitle,
   headerLeft,
   headerRight,
   footer,
@@ -66,10 +68,11 @@ export const AppScreenLayout = ({
         barStyle={'light-content'}
       />
       <AppScreenHeader
+        title={title}
+        subtitle={subtitle}
         headerLeft={headerLeft}
-        headerRight={headerRight}>
-        {title}
-      </AppScreenHeader>
+        headerRight={headerRight}
+      />
       {contentElement}
       {!!footer && <AppScreenFooterWrapper>{footer}</AppScreenFooterWrapper>}
     </View>

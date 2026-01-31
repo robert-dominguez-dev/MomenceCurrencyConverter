@@ -3,13 +3,14 @@ import { AppNavigatorScreen, AppNavigatorScreenParams } from '../../types.ts';
 import { AppScreenLayout } from '../../../../common/AppScreenLayout/AppScreenLayout.tsx';
 import { useExchangeRates } from '../../../../../networking/useExchangeRates/useExchangeRates.ts';
 import { AppQueryResolver } from '../../../../common/AppQueryResolver/AppQueryResolver.tsx';
-import { CnbCurrencyEntry } from '../../../../../networking/useExchangeRates/types.ts';
+import { CnbExchangeRatesInfo } from '../../../../../networking/useExchangeRates/types.ts';
 import { CurrencyRateContent } from './components/CurrencyRateContent.tsx';
 import React from 'react';
 import { RatesScreenFooter } from './components/RatesScreenFooter.tsx';
 import { AppThemeToggleButton } from '../../../../common/AppThemeToggleButton.tsx';
+import { composeExchangeRateDatesString } from './helpers/composeExchangeRateDatesString.ts';
 
-const headerLeftElement = <AppThemeToggleButton />;
+const headerRightElement = <AppThemeToggleButton />;
 
 type RatesScreenProps = ScreenProps<
   AppNavigatorScreenParams,
@@ -17,9 +18,14 @@ type RatesScreenProps = ScreenProps<
 >;
 
 export const RatesScreen = ({ navigation }: RatesScreenProps) => {
-  const { data, isPending, error } = useExchangeRates();
+  const { data, dataUpdatedAt, isPending, error } = useExchangeRates();
 
-  const renderContent = (entries: CnbCurrencyEntry[]) => (
+  const subtitle = composeExchangeRateDatesString({
+    latestCnbRateEffectiveDate: data?.latestCnbRateEffectiveDate,
+    dataUpdatedAt,
+  });
+
+  const renderContent = ({ entries }: CnbExchangeRatesInfo) => (
     <CurrencyRateContent entries={entries} />
   );
 
@@ -31,7 +37,8 @@ export const RatesScreen = ({ navigation }: RatesScreenProps) => {
   return (
     <AppScreenLayout
       title={'Exchange Rates'}
-      headerLeft={headerLeftElement}
+      subtitle={subtitle}
+      headerRight={headerRightElement}
       footer={footerElement}>
       <AppQueryResolver
         data={data}

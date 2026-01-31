@@ -1,5 +1,7 @@
 import { composeCnbCurrencyRateEntries } from './composeCnbCurrencyRateEntries.ts';
 import { CnbCurrencyCode } from '../constants.ts';
+import { CnbExchangeRatesInfo } from '../types.ts';
+import { parseCnbDate } from './parseCnbDate.ts';
 
 type TestCase = {
   description: string;
@@ -7,7 +9,7 @@ type TestCase = {
     dailyCurrencyRatesDataString: string;
     yearlyCurrencyRatesDataStrings: string[];
   };
-  expectedOutput: ReturnType<typeof composeCnbCurrencyRateEntries>;
+  expectedOutput: CnbExchangeRatesInfo;
 };
 
 const testCases: TestCase[] = [
@@ -73,310 +75,321 @@ United Kingdom|pound|1|GBP|28.102
 USA|dollar|1|USD|20.345
 `,
     },
-    expectedOutput: [
-      {
-        currencyCode: CnbCurrencyCode.AUD,
-        currencyName: 'dollar',
-        countryName: 'Australia',
-        czkRateTrendValues: [
-          13.797, 13.835, 13.895, 13.986, 13.919, 13.955, 13.951, 13.938,
-          13.908, 13.963, 14.004, 14.006, 13.966, 14.053, 14.133, 14.182,
-          14.155, 14.135, 14.203, 14.368,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.BRL,
-        currencyName: 'real',
-        countryName: 'Brazil',
-        czkRateTrendValues: [
-          3.789, 3.807, 3.837, 3.858, 3.864, 3.881, 3.871, 3.865, 3.881, 3.879,
-          3.893, 3.894, 3.846, 3.882, 3.905, 3.909, 3.876, 3.873, 3.916, 3.923,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.CAD,
-        currencyName: 'dollar',
-        countryName: 'Canada',
-        czkRateTrendValues: [
-          15.014, 15.036, 15.004, 15.053, 14.993, 15.057, 14.974, 14.992,
-          15.013, 15.023, 15.054, 15.042, 15.011, 15.043, 15.027, 15.01, 14.942,
-          14.878, 14.962, 15.042,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.CNY,
-        currencyName: 'renminbi',
-        countryName: 'China',
-        czkRateTrendValues: [
-          2.947, 2.97, 2.96, 2.971, 2.977, 2.994, 2.979, 2.983, 2.987, 2.998, 3,
-          2.999, 2.982, 2.981, 2.976, 2.966, 2.945, 2.925, 2.921, 2.929,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.DKK,
-        currencyName: 'krone',
-        countryName: 'Denmark',
-        czkRateTrendValues: [
-          3.236, 3.239, 3.238, 3.249, 3.247, 3.257, 3.25, 3.245, 3.248, 3.249,
-          3.251, 3.251, 3.257, 3.261, 3.254, 3.249, 3.247, 3.25, 3.254, 3.26,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.EUR,
-        currencyName: 'euro',
-        countryName: 'EMU',
-        czkRateTrendValues: [
-          24.17, 24.195, 24.195, 24.28, 24.265, 24.34, 24.285, 24.25, 24.27,
-          24.275, 24.285, 24.29, 24.335, 24.36, 24.305, 24.265, 24.25, 24.27,
-          24.295, 24.34,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.HKD,
-        currencyName: 'dollar',
-        countryName: 'Hongkong',
-        czkRateTrendValues: [
-          2.645, 2.664, 2.654, 2.668, 2.667, 2.681, 2.664, 2.667, 2.671, 2.678,
-          2.681, 2.678, 2.661, 2.662, 2.662, 2.649, 2.627, 2.608, 2.601, 2.607,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.HUF,
-        currencyName: 'forint',
-        countryName: 'Hungary',
-        czkRateTrendValues: [
-          0.06304, 0.06291000000000001, 0.06283, 0.06304, 0.06306, 0.06307,
-          0.06278, 0.06269999999999999, 0.06273, 0.06295, 0.063,
-          0.06291000000000001, 0.06307, 0.06316, 0.06349, 0.06349,
-          0.06352000000000001, 0.06373000000000001, 0.06373999999999999,
-          0.06389,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.ISK,
-        currencyName: 'krona',
-        countryName: 'Iceland',
-        czkRateTrendValues: [
-          0.16398, 0.16415, 0.16437000000000002, 0.16495, 0.16484000000000001,
-          0.16513000000000003, 0.16498000000000002, 0.16542,
-          0.16577999999999998, 0.16580999999999999, 0.16588, 0.16614, 0.16645,
-          0.16662, 0.16646999999999998, 0.16620000000000001, 0.16678, 0.16715,
-          0.16754999999999998, 0.16809000000000002,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.XDR,
-        currencyName: 'SDR',
-        countryName: 'IMF',
-        czkRateTrendValues: [
-          28.227, 28.385, 28.256, 28.433, 28.424, 28.567, 28.346, 28.432,
-          28.446, 28.505, 28.521, 28.481, 28.297, 28.419, 28.384, 28.23, 27.99,
-          27.801, 27.953, 28.145,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.INR,
-        currencyName: 'rupee',
-        countryName: 'India',
-        czkRateTrendValues: [
-          0.22855, 0.22973, 0.22928, 0.23124, 0.23115, 0.23174, 0.23035,
-          0.23061, 0.23063, 0.23117000000000001, 0.23043, 0.22979, 0.22807,
-          0.22655, 0.22661, 0.22491, 0.22315000000000002, 0.22206, 0.22064,
-          0.22132000000000002,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.IDR,
-        currencyName: 'rupiah',
-        countryName: 'Indonesia',
-        czkRateTrendValues: [
-          0.0012330000000000002, 0.001239, 0.001234, 0.001238, 0.001238,
-          0.001244, 0.001234, 0.001234, 0.0012350000000000002, 0.001237,
-          0.001238, 0.0012330000000000002, 0.001224, 0.0012259999999999999,
-          0.001229, 0.001229, 0.001221, 0.001214, 0.0012150000000000002,
-          0.0012150000000000002,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.ILS,
-        currencyName: 'new shekel',
-        countryName: 'Israel',
-        czkRateTrendValues: [
-          6.492, 6.565, 6.535, 6.543, 6.556, 6.623, 6.587, 6.605, 6.59, 6.619,
-          6.639, 6.608, 6.547, 6.542, 6.609, 6.571, 6.532, 6.554, 6.562, 6.611,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.JPY,
-        currencyName: 'yen',
-        countryName: 'Japan',
-        czkRateTrendValues: [
-          0.13141, 0.13226000000000002, 0.13213, 0.13278, 0.13263, 0.13266,
-          0.13166, 0.13098, 0.13133, 0.13168, 0.13225, 0.13222,
-          0.13143000000000002, 0.13152, 0.13075, 0.13061999999999999, 0.13279,
-          0.13269, 0.13299, 0.13272,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.MYR,
-        currencyName: 'ringgit',
-        countryName: 'Malaysia',
-        czkRateTrendValues: [
-          5.084, 5.093, 5.107, 5.119, 5.116, 5.131, 5.113, 5.128, 5.146, 5.151,
-          5.153, 5.15, 5.117, 5.129, 5.138, 5.158, 5.165, 5.147, 5.178, 5.18,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.MXN,
-        currencyName: 'peso',
-        countryName: 'Mexico',
-        czkRateTrendValues: [
-          1.149, 1.151, 1.151, 1.156, 1.157, 1.16, 1.16, 1.162, 1.169, 1.174,
-          1.183, 1.185, 1.177, 1.187, 1.187, 1.184, 1.178, 1.177, 1.182, 1.186,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.NZD,
-        currencyName: 'dollar',
-        countryName: 'New Zealand',
-        czkRateTrendValues: [
-          11.892, 11.925, 11.964, 12.023, 11.952, 11.969, 11.98, 11.982, 11.956,
-          11.989, 12.04, 12.085, 12.107, 12.17, 12.208, 12.221, 12.203, 12.194,
-          12.236, 12.361,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.NOK,
-        currencyName: 'krone',
-        countryName: 'Norway',
-        czkRateTrendValues: [
-          2.046, 2.053, 2.063, 2.065, 2.058, 2.067, 2.068, 2.063, 2.068, 2.072,
-          2.073, 2.071, 2.077, 2.094, 2.099, 2.102, 2.089, 2.098, 2.11, 2.133,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.PHP,
-        currencyName: 'peso',
-        countryName: 'Philippines',
-        czkRateTrendValues: [
-          0.35025, 0.35107, 0.34902, 0.35027, 0.35129, 0.35301000000000005,
-          0.3497, 0.34995, 0.35028, 0.35098, 0.35204, 0.3513, 0.34994, 0.35044,
-          0.35094000000000003, 0.34970999999999997, 0.34612000000000004,
-          0.34457, 0.34535, 0.34485999999999994,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.PLN,
-        currencyName: 'zloty',
-        countryName: 'Poland',
-        czkRateTrendValues: [
-          5.739, 5.737, 5.747, 5.761, 5.764, 5.777, 5.769, 5.758, 5.754, 5.768,
-          5.748, 5.75, 5.756, 5.761, 5.778, 5.772, 5.762, 5.775, 5.779, 5.789,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.RON,
-        currencyName: 'leu',
-        countryName: 'Romania',
-        czkRateTrendValues: [
-          4.742, 4.756, 4.754, 4.771, 4.768, 4.781, 4.773, 4.764, 4.769, 4.77,
-          4.77, 4.77, 4.779, 4.782, 4.772, 4.763, 4.758, 4.762, 4.767, 4.776,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.SGD,
-        currencyName: 'dollar',
-        countryName: 'Singapore',
-        czkRateTrendValues: [
-          16.025, 16.11, 16.149, 16.213, 16.184, 16.243, 16.171, 16.159, 16.174,
-          16.217, 16.233, 16.251, 16.173, 16.193, 16.172, 16.156, 16.116,
-          16.079, 16.083, 16.094,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.ZAR,
-        currencyName: 'rand',
-        countryName: 'South Africa',
-        czkRateTrendValues: [
-          1.249, 1.258, 1.261, 1.263, 1.259, 1.262, 1.268, 1.264, 1.27, 1.275,
-          1.276, 1.272, 1.262, 1.272, 1.28, 1.279, 1.274, 1.272, 1.277, 1.296,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.KRW,
-        currencyName: 'won',
-        countryName: 'South Korea',
-        czkRateTrendValues: [
-          0.01426, 0.01433, 0.01427, 0.01436, 0.01431, 0.01433, 0.01417,
-          0.014110000000000001, 0.014119999999999999, 0.01422,
-          0.014190000000000001, 0.01418, 0.01405, 0.01417, 0.014150000000000001,
-          0.014079999999999999, 0.014150000000000001, 0.014110000000000001,
-          0.014199999999999999, 0.01421,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.SEK,
-        currencyName: 'krona',
-        countryName: 'Sweden',
-        czkRateTrendValues: [
-          2.235, 2.243, 2.248, 2.261, 2.254, 2.265, 2.269, 2.264, 2.263, 2.269,
-          2.266, 2.263, 2.272, 2.285, 2.294, 2.296, 2.281, 2.293, 2.295, 2.303,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.CHF,
-        currencyName: 'franc',
-        countryName: 'Switzerland',
-        czkRateTrendValues: [
-          25.997, 26.063, 26.062, 26.093, 26.057, 26.141, 26.076, 26.044,
-          26.013, 26.065, 26.075, 26.171, 26.261, 26.28, 26.182, 26.156, 26.299,
-          26.4, 26.444, 26.51,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.THB,
-        currencyName: 'baht',
-        countryName: 'Thailand',
-        czkRateTrendValues: [
-          0.6568200000000001, 0.66101, 0.6611, 0.66314, 0.6591, 0.66443,
-          0.6654800000000001, 0.6612, 0.6618, 0.66523, 0.66471, 0.66846,
-          0.66756, 0.66798, 0.66269, 0.66289, 0.65729, 0.65569,
-          0.6521399999999999, 0.652,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.TRY,
-        currencyName: 'lira',
-        countryName: 'Turkey',
-        czkRateTrendValues: [
-          0.48033000000000003, 0.48189, 0.4802, 0.48266, 0.48280999999999996,
-          0.48575, 0.48156, 0.48211, 0.48249000000000003, 0.48397, 0.48319,
-          0.48253, 0.47932, 0.47942999999999997, 0.47952, 0.4765,
-          0.47220999999999996, 0.46875999999999995, 0.46738,
-          0.46856000000000003,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.GBP,
-        currencyName: 'pound',
-        countryName: 'United Kingdom',
-        czkRateTrendValues: [
-          27.718, 27.88, 27.931, 28.022, 27.935, 28.062, 27.993, 28.003, 27.998,
-          27.982, 28.004, 28.01, 27.894, 27.859, 27.855, 27.953, 27.952, 27.955,
-          27.978, 28.102,
-        ],
-      },
-      {
-        currencyCode: CnbCurrencyCode.USD,
-        currencyName: 'dollar',
-        countryName: 'USA',
-        czkRateTrendValues: [
-          20.611, 20.742, 20.67, 20.774, 20.785, 20.903, 20.77, 20.807, 20.83,
-          20.884, 20.908, 20.883, 20.748, 20.758, 20.756, 20.659, 20.483,
-          20.345, 20.291, 20.345,
-        ],
-      },
-    ],
+    expectedOutput: {
+      latestCnbRateEffectiveDate: parseCnbDate('29.01.2026'),
+      entries: [
+        {
+          currencyCode: CnbCurrencyCode.AUD,
+          currencyName: 'dollar',
+          countryName: 'Australia',
+          czkRateTrendValues: [
+            13.797, 13.835, 13.895, 13.986, 13.919, 13.955, 13.951, 13.938,
+            13.908, 13.963, 14.004, 14.006, 13.966, 14.053, 14.133, 14.182,
+            14.155, 14.135, 14.203, 14.368,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.BRL,
+          currencyName: 'real',
+          countryName: 'Brazil',
+          czkRateTrendValues: [
+            3.789, 3.807, 3.837, 3.858, 3.864, 3.881, 3.871, 3.865, 3.881,
+            3.879, 3.893, 3.894, 3.846, 3.882, 3.905, 3.909, 3.876, 3.873,
+            3.916, 3.923,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.CAD,
+          currencyName: 'dollar',
+          countryName: 'Canada',
+          czkRateTrendValues: [
+            15.014, 15.036, 15.004, 15.053, 14.993, 15.057, 14.974, 14.992,
+            15.013, 15.023, 15.054, 15.042, 15.011, 15.043, 15.027, 15.01,
+            14.942, 14.878, 14.962, 15.042,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.CNY,
+          currencyName: 'renminbi',
+          countryName: 'China',
+          czkRateTrendValues: [
+            2.947, 2.97, 2.96, 2.971, 2.977, 2.994, 2.979, 2.983, 2.987, 2.998,
+            3, 2.999, 2.982, 2.981, 2.976, 2.966, 2.945, 2.925, 2.921, 2.929,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.DKK,
+          currencyName: 'krone',
+          countryName: 'Denmark',
+          czkRateTrendValues: [
+            3.236, 3.239, 3.238, 3.249, 3.247, 3.257, 3.25, 3.245, 3.248, 3.249,
+            3.251, 3.251, 3.257, 3.261, 3.254, 3.249, 3.247, 3.25, 3.254, 3.26,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.EUR,
+          currencyName: 'euro',
+          countryName: 'EMU',
+          czkRateTrendValues: [
+            24.17, 24.195, 24.195, 24.28, 24.265, 24.34, 24.285, 24.25, 24.27,
+            24.275, 24.285, 24.29, 24.335, 24.36, 24.305, 24.265, 24.25, 24.27,
+            24.295, 24.34,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.HKD,
+          currencyName: 'dollar',
+          countryName: 'Hongkong',
+          czkRateTrendValues: [
+            2.645, 2.664, 2.654, 2.668, 2.667, 2.681, 2.664, 2.667, 2.671,
+            2.678, 2.681, 2.678, 2.661, 2.662, 2.662, 2.649, 2.627, 2.608,
+            2.601, 2.607,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.HUF,
+          currencyName: 'forint',
+          countryName: 'Hungary',
+          czkRateTrendValues: [
+            0.06304, 0.06291000000000001, 0.06283, 0.06304, 0.06306, 0.06307,
+            0.06278, 0.06269999999999999, 0.06273, 0.06295, 0.063,
+            0.06291000000000001, 0.06307, 0.06316, 0.06349, 0.06349,
+            0.06352000000000001, 0.06373000000000001, 0.06373999999999999,
+            0.06389,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.ISK,
+          currencyName: 'krona',
+          countryName: 'Iceland',
+          czkRateTrendValues: [
+            0.16398, 0.16415, 0.16437000000000002, 0.16495, 0.16484000000000001,
+            0.16513000000000003, 0.16498000000000002, 0.16542,
+            0.16577999999999998, 0.16580999999999999, 0.16588, 0.16614, 0.16645,
+            0.16662, 0.16646999999999998, 0.16620000000000001, 0.16678, 0.16715,
+            0.16754999999999998, 0.16809000000000002,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.XDR,
+          currencyName: 'SDR',
+          countryName: 'IMF',
+          czkRateTrendValues: [
+            28.227, 28.385, 28.256, 28.433, 28.424, 28.567, 28.346, 28.432,
+            28.446, 28.505, 28.521, 28.481, 28.297, 28.419, 28.384, 28.23,
+            27.99, 27.801, 27.953, 28.145,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.INR,
+          currencyName: 'rupee',
+          countryName: 'India',
+          czkRateTrendValues: [
+            0.22855, 0.22973, 0.22928, 0.23124, 0.23115, 0.23174, 0.23035,
+            0.23061, 0.23063, 0.23117000000000001, 0.23043, 0.22979, 0.22807,
+            0.22655, 0.22661, 0.22491, 0.22315000000000002, 0.22206, 0.22064,
+            0.22132000000000002,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.IDR,
+          currencyName: 'rupiah',
+          countryName: 'Indonesia',
+          czkRateTrendValues: [
+            0.0012330000000000002, 0.001239, 0.001234, 0.001238, 0.001238,
+            0.001244, 0.001234, 0.001234, 0.0012350000000000002, 0.001237,
+            0.001238, 0.0012330000000000002, 0.001224, 0.0012259999999999999,
+            0.001229, 0.001229, 0.001221, 0.001214, 0.0012150000000000002,
+            0.0012150000000000002,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.ILS,
+          currencyName: 'new shekel',
+          countryName: 'Israel',
+          czkRateTrendValues: [
+            6.492, 6.565, 6.535, 6.543, 6.556, 6.623, 6.587, 6.605, 6.59, 6.619,
+            6.639, 6.608, 6.547, 6.542, 6.609, 6.571, 6.532, 6.554, 6.562,
+            6.611,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.JPY,
+          currencyName: 'yen',
+          countryName: 'Japan',
+          czkRateTrendValues: [
+            0.13141, 0.13226000000000002, 0.13213, 0.13278, 0.13263, 0.13266,
+            0.13166, 0.13098, 0.13133, 0.13168, 0.13225, 0.13222,
+            0.13143000000000002, 0.13152, 0.13075, 0.13061999999999999, 0.13279,
+            0.13269, 0.13299, 0.13272,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.MYR,
+          currencyName: 'ringgit',
+          countryName: 'Malaysia',
+          czkRateTrendValues: [
+            5.084, 5.093, 5.107, 5.119, 5.116, 5.131, 5.113, 5.128, 5.146,
+            5.151, 5.153, 5.15, 5.117, 5.129, 5.138, 5.158, 5.165, 5.147, 5.178,
+            5.18,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.MXN,
+          currencyName: 'peso',
+          countryName: 'Mexico',
+          czkRateTrendValues: [
+            1.149, 1.151, 1.151, 1.156, 1.157, 1.16, 1.16, 1.162, 1.169, 1.174,
+            1.183, 1.185, 1.177, 1.187, 1.187, 1.184, 1.178, 1.177, 1.182,
+            1.186,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.NZD,
+          currencyName: 'dollar',
+          countryName: 'New Zealand',
+          czkRateTrendValues: [
+            11.892, 11.925, 11.964, 12.023, 11.952, 11.969, 11.98, 11.982,
+            11.956, 11.989, 12.04, 12.085, 12.107, 12.17, 12.208, 12.221,
+            12.203, 12.194, 12.236, 12.361,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.NOK,
+          currencyName: 'krone',
+          countryName: 'Norway',
+          czkRateTrendValues: [
+            2.046, 2.053, 2.063, 2.065, 2.058, 2.067, 2.068, 2.063, 2.068,
+            2.072, 2.073, 2.071, 2.077, 2.094, 2.099, 2.102, 2.089, 2.098, 2.11,
+            2.133,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.PHP,
+          currencyName: 'peso',
+          countryName: 'Philippines',
+          czkRateTrendValues: [
+            0.35025, 0.35107, 0.34902, 0.35027, 0.35129, 0.35301000000000005,
+            0.3497, 0.34995, 0.35028, 0.35098, 0.35204, 0.3513, 0.34994,
+            0.35044, 0.35094000000000003, 0.34970999999999997,
+            0.34612000000000004, 0.34457, 0.34535, 0.34485999999999994,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.PLN,
+          currencyName: 'zloty',
+          countryName: 'Poland',
+          czkRateTrendValues: [
+            5.739, 5.737, 5.747, 5.761, 5.764, 5.777, 5.769, 5.758, 5.754,
+            5.768, 5.748, 5.75, 5.756, 5.761, 5.778, 5.772, 5.762, 5.775, 5.779,
+            5.789,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.RON,
+          currencyName: 'leu',
+          countryName: 'Romania',
+          czkRateTrendValues: [
+            4.742, 4.756, 4.754, 4.771, 4.768, 4.781, 4.773, 4.764, 4.769, 4.77,
+            4.77, 4.77, 4.779, 4.782, 4.772, 4.763, 4.758, 4.762, 4.767, 4.776,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.SGD,
+          currencyName: 'dollar',
+          countryName: 'Singapore',
+          czkRateTrendValues: [
+            16.025, 16.11, 16.149, 16.213, 16.184, 16.243, 16.171, 16.159,
+            16.174, 16.217, 16.233, 16.251, 16.173, 16.193, 16.172, 16.156,
+            16.116, 16.079, 16.083, 16.094,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.ZAR,
+          currencyName: 'rand',
+          countryName: 'South Africa',
+          czkRateTrendValues: [
+            1.249, 1.258, 1.261, 1.263, 1.259, 1.262, 1.268, 1.264, 1.27, 1.275,
+            1.276, 1.272, 1.262, 1.272, 1.28, 1.279, 1.274, 1.272, 1.277, 1.296,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.KRW,
+          currencyName: 'won',
+          countryName: 'South Korea',
+          czkRateTrendValues: [
+            0.01426, 0.01433, 0.01427, 0.01436, 0.01431, 0.01433, 0.01417,
+            0.014110000000000001, 0.014119999999999999, 0.01422,
+            0.014190000000000001, 0.01418, 0.01405, 0.01417,
+            0.014150000000000001, 0.014079999999999999, 0.014150000000000001,
+            0.014110000000000001, 0.014199999999999999, 0.01421,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.SEK,
+          currencyName: 'krona',
+          countryName: 'Sweden',
+          czkRateTrendValues: [
+            2.235, 2.243, 2.248, 2.261, 2.254, 2.265, 2.269, 2.264, 2.263,
+            2.269, 2.266, 2.263, 2.272, 2.285, 2.294, 2.296, 2.281, 2.293,
+            2.295, 2.303,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.CHF,
+          currencyName: 'franc',
+          countryName: 'Switzerland',
+          czkRateTrendValues: [
+            25.997, 26.063, 26.062, 26.093, 26.057, 26.141, 26.076, 26.044,
+            26.013, 26.065, 26.075, 26.171, 26.261, 26.28, 26.182, 26.156,
+            26.299, 26.4, 26.444, 26.51,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.THB,
+          currencyName: 'baht',
+          countryName: 'Thailand',
+          czkRateTrendValues: [
+            0.6568200000000001, 0.66101, 0.6611, 0.66314, 0.6591, 0.66443,
+            0.6654800000000001, 0.6612, 0.6618, 0.66523, 0.66471, 0.66846,
+            0.66756, 0.66798, 0.66269, 0.66289, 0.65729, 0.65569,
+            0.6521399999999999, 0.652,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.TRY,
+          currencyName: 'lira',
+          countryName: 'Turkey',
+          czkRateTrendValues: [
+            0.48033000000000003, 0.48189, 0.4802, 0.48266, 0.48280999999999996,
+            0.48575, 0.48156, 0.48211, 0.48249000000000003, 0.48397, 0.48319,
+            0.48253, 0.47932, 0.47942999999999997, 0.47952, 0.4765,
+            0.47220999999999996, 0.46875999999999995, 0.46738,
+            0.46856000000000003,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.GBP,
+          currencyName: 'pound',
+          countryName: 'United Kingdom',
+          czkRateTrendValues: [
+            27.718, 27.88, 27.931, 28.022, 27.935, 28.062, 27.993, 28.003,
+            27.998, 27.982, 28.004, 28.01, 27.894, 27.859, 27.855, 27.953,
+            27.952, 27.955, 27.978, 28.102,
+          ],
+        },
+        {
+          currencyCode: CnbCurrencyCode.USD,
+          currencyName: 'dollar',
+          countryName: 'USA',
+          czkRateTrendValues: [
+            20.611, 20.742, 20.67, 20.774, 20.785, 20.903, 20.77, 20.807, 20.83,
+            20.884, 20.908, 20.883, 20.748, 20.758, 20.756, 20.659, 20.483,
+            20.345, 20.291, 20.345,
+          ],
+        },
+      ],
+    },
   },
 ];
 

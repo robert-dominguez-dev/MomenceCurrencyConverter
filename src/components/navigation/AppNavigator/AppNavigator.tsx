@@ -3,7 +3,7 @@ import { AppNavigatorScreen, AppNavigatorScreenParams } from './types.ts';
 import {
   commonAppNavigationOptions,
   ROOT_STACK_NAVIGATOR_ID,
-} from '../constants.ts';
+} from '../constants.tsx';
 
 import { memo } from 'react';
 import { ConverterScreen } from './screens/ConverterScreen/ConverterScreen.tsx';

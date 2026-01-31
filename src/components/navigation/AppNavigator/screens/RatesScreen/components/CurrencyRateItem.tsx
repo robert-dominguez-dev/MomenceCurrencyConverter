@@ -45,9 +45,9 @@ const _CurrencyRateItem = ({
     maxValue,
   },
 }: CurrencyRateItemProps) => {
-  const { surface, border, primary, danger, icon } = useAppThemedColors();
+  const { surface, border, accent, danger, icon } = useAppThemedColors();
 
-  const trendColor: HexColor = isBullish ? primary : danger;
+  const trendColor: HexColor = isBullish ? accent : danger;
   const trendTextStatus: AppTextStatus = isBullish ? 'success' : 'danger';
 
   const deltaFormatted: string = deltaPercents

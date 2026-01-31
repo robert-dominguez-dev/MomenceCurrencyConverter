@@ -1,40 +1,63 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components/native';
 import { AppSize } from '../../../../constants/common.ts';
-import { ChildrenProp } from '../../../../types/common.ts';
 import { AppText } from '../../AppText/AppText.tsx';
+import { useAppThemedColors } from '../../../../hooks/useAppThemedColors.ts';
 
-export type AppScreenHeaderProps = ChildrenProp & {
+export type AppScreenHeaderProps = {
+  title: string;
+  subtitle?: string;
   headerLeft?: ReactNode;
   headerRight?: ReactNode;
 };
 
 export const AppScreenHeader = ({
-  children,
+  title,
+  subtitle,
   headerLeft,
   headerRight,
-}: AppScreenHeaderProps) => (
-  <HeaderStyled>
-    <HeaderSideStyled>{headerLeft}</HeaderSideStyled>
-    <HeaderCenterStyled>
-      <AppText
-        numberOfLines={1}
-        category={'heading'}>
-        {children}
-      </AppText>
-    </HeaderCenterStyled>
-    <HeaderSideRightStyled>{headerRight}</HeaderSideRightStyled>
-  </HeaderStyled>
-);
+}: AppScreenHeaderProps) => {
+  const { border } = useAppThemedColors();
+  return (
+    <HeaderStyled $borderColor={border}>
+      <HeaderContentStyled>
+        <HeaderSideStyled>{headerLeft}</HeaderSideStyled>
+        <HeaderCenterStyled>
+          <AppText
+            numberOfLines={1}
+            category={'heading'}>
+            {title}
+          </AppText>
+        </HeaderCenterStyled>
+        <HeaderSideRightStyled>{headerRight}</HeaderSideRightStyled>
+      </HeaderContentStyled>
+      {!!subtitle && (
+        <AppText
+          numberOfLines={1}
+          category={'caption'}
+          status={'muted'}>
+          {subtitle}
+        </AppText>
+      )}
+    </HeaderStyled>
+  );
+};
 
-const HEADER_HEIGHT = AppSize.xxl;
 const HEADER_SIDE_MIN_WIDTH = AppSize.xl;
 
-const HeaderStyled = styled.View`
-  height: ${HEADER_HEIGHT}px;
-  padding: 0 ${AppSize.m}px;
-  flex-direction: row;
+type HeaderStyledProps = {
+  $borderColor: string;
+};
+
+const HeaderStyled = styled.View<HeaderStyledProps>`
   align-items: center;
+  padding-bottom: ${AppSize.m}px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({ $borderColor }) => $borderColor};
+`;
+
+const HeaderContentStyled = styled.View`
+  flex-direction: row;
   justify-content: space-between;
 `;
 

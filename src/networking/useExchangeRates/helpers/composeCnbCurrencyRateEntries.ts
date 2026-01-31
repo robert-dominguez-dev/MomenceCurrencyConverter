@@ -1,4 +1,4 @@
-import { CnbCurrencyEntry } from '../types.ts';
+import { CnbCurrencyEntry, CnbExchangeRatesInfo } from '../types.ts';
 import { parseCnbYearRates } from './parseCnbYearRates.ts';
 import { parseCnbDailyRates } from './parseCnbDailyRates.ts';
 import { composeCzkRateTrendValues } from './composeCzkRateTrendValues.ts';
@@ -11,12 +11,12 @@ type ComposeCnbCurrencyRateEntries = {
 export const composeCnbCurrencyRateEntries = ({
   dailyCurrencyRatesDataString,
   yearlyCurrencyRatesDataStrings,
-}: ComposeCnbCurrencyRateEntries) => {
+}: ComposeCnbCurrencyRateEntries): CnbExchangeRatesInfo => {
   const dailyRateItems = parseCnbDailyRates(dailyCurrencyRatesDataString);
   const yearlyRateItems =
     yearlyCurrencyRatesDataStrings.flatMap(parseCnbYearRates);
 
-  return dailyRateItems.reduce<CnbCurrencyEntry[]>(
+  const entries = dailyRateItems.reduce<CnbCurrencyEntry[]>(
     (acc, { currencyCode, currencyName, countryName, czkRate }) => {
       const czkRateTrendValues = composeCzkRateTrendValues(
         yearlyRateItems,
@@ -43,4 +43,12 @@ export const composeCnbCurrencyRateEntries = ({
     },
     [],
   );
+
+  const latestCnbRateEffectiveDate =
+    yearlyRateItems[yearlyRateItems.length - 1].date;
+
+  return {
+    latestCnbRateEffectiveDate,
+    entries,
+  };
 };

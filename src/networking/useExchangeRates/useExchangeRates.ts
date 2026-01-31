@@ -1,7 +1,7 @@
 import { axiosInstance } from '../constants.ts';
 import { useQuery } from '@tanstack/react-query';
 import { ONE_HOUR_IN_MS } from '../../constants/common.ts';
-import { CnbCurrencyEntry } from './types.ts';
+import { CnbExchangeRatesInfo } from './types.ts';
 import { getYearsForLastDays } from '../../helpers/getYearsForLastDays.ts';
 import { WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS } from './constants.ts';
 import { composeCnbCurrencyRateEntries } from './helpers/composeCnbCurrencyRateEntries.ts';
@@ -29,7 +29,7 @@ const fetchCnbYear = async (year: number): Promise<string> => {
 
 const fetchAndProcessCnbData = async (
   yearsFromOldest: number[],
-): Promise<CnbCurrencyEntry[]> => {
+): Promise<CnbExchangeRatesInfo> => {
   const dailyCurrencyRatesDataPromise = fetchCnbDaily();
   const yearlyCurrencyRatesDataPromises = yearsFromOldest.map(year =>
     fetchCnbYear(year),
@@ -52,7 +52,7 @@ export const useExchangeRates = () => {
     WANTED_CNB_EXCHANGE_RATES_HISTORY_IN_DAYS,
   );
 
-  const { data, isPending, error } = useQuery({
+  const { data, dataUpdatedAt, isPending, error } = useQuery({
     queryKey: ['cnb', 'rates', ...yearsFromOldest],
     queryFn: () => fetchAndProcessCnbData(yearsFromOldest),
     staleTime: ONE_HOUR_IN_MS,
@@ -61,6 +61,7 @@ export const useExchangeRates = () => {
 
   return {
     data,
+    dataUpdatedAt,
     isPending,
     error,
   };
