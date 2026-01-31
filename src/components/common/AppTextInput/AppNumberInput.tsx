@@ -1,6 +1,17 @@
-import { Controller, ControllerProps, FieldPath, FieldValues, } from 'react-hook-form';
-import { AppNumberInputBase, AppNumberInputBaseProps, } from './components/AppNumberInputBase.tsx';
-import { composeNumberInputRules, ComposeNumberInputRulesParams, } from './helpers/composeNumberInputRules.ts';
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+} from 'react-hook-form';
+import {
+  AppNumberInputBase,
+  AppNumberInputBaseProps,
+} from './components/AppNumberInputBase.tsx';
+import {
+  composeNumberInputRules,
+  ComposeNumberInputRulesParams,
+} from './helpers/composeNumberInputRules.ts';
 
 type AppNumberInputProps<
   TFieldValues extends FieldValues,
