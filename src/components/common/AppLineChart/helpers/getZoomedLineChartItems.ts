@@ -1,5 +1,7 @@
-import { CurrencyRateDeltaInfo } from '../../../navigation/AppNavigator/screens/RatesScreen/helpers/getCurrencyRateDeltaProps.ts';
 import { AppLineChartItem } from '../types.ts';
+import {
+  CurrencyRateDeltaInfo
+} from '../../../navigation/AppNavigator/screens/TabsNavigator/screens/RatesScreen/helpers/getCurrencyRateDeltaProps.ts';
 
 export type GetZoomedLineChartItemsParams = Pick<
   CurrencyRateDeltaInfo,
