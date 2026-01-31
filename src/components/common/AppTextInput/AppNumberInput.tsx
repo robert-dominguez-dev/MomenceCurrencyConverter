@@ -1,24 +1,13 @@
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-} from 'react-hook-form';
-import {
-  AppNumberInputBase,
-  AppNumberInputBaseProps,
-} from './components/AppNumberInputBase.tsx';
-import {
-  composeNumberInputRules,
-  ComposeNumberInputRulesParams,
-} from './helpers/composeNumberInputRules.ts';
+import { Controller, ControllerProps, FieldPath, FieldValues, } from 'react-hook-form';
+import { AppNumberInputBase, AppNumberInputBaseProps, } from './components/AppNumberInputBase.tsx';
+import { composeNumberInputRules, ComposeNumberInputRulesParams, } from './helpers/composeNumberInputRules.ts';
 
 type AppNumberInputProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
 > = ComposeNumberInputRulesParams &
   Pick<ControllerProps<TFieldValues, TName>, 'control' | 'name'> &
-  Pick<AppNumberInputBaseProps, 'placeholder' | 'autoFocus'>;
+  Pick<AppNumberInputBaseProps, 'placeholder' | 'autoFocus' | 'accessoryLeft'>;
 
 export const AppNumberInput = <
   TFieldValues extends FieldValues,
@@ -28,6 +17,7 @@ export const AppNumberInput = <
   name,
   placeholder,
   autoFocus,
+  accessoryLeft,
   isRequired,
   min,
   max,
@@ -45,6 +35,7 @@ export const AppNumberInput = <
         value={value}
         placeholder={placeholder}
         autoFocus={autoFocus}
+        accessoryLeft={accessoryLeft}
         onChange={onChange}
       />
     )}

@@ -9,12 +9,13 @@ import {
 import { AppScreenFooterWrapper } from './components/AppScreenFooterWrapper.tsx';
 import { useAppThemedColors } from '../../../hooks/useAppThemedColors.ts';
 import { ChildrenProp } from '../../../types/common.ts';
+import { checkIsValidNumber } from '../../../helpers/checkIsValidNumber.ts';
 
 const contentStyle: ViewStyle = {
   flex: 1,
 };
 
-const contentContainerStyle: ViewStyle = {
+const defaultContentContainerStyle: ViewStyle = {
   paddingTop: AppSize.m,
   paddingBottom: AppSize.m,
 };
@@ -22,8 +23,9 @@ const contentContainerStyle: ViewStyle = {
 type AppScreenLayoutProps = ChildrenProp &
   AppScreenHeaderProps & {
     footer?: ReactNode;
+    contentContainerStyle?: ViewStyle;
+    paddingTopOverride?: number;
     shouldUseScrollView?: boolean;
-    shouldUseSafeAreaBottomPadding?: boolean;
   };
 
 export const AppScreenLayout = ({
@@ -32,9 +34,10 @@ export const AppScreenLayout = ({
   headerLeft,
   headerRight,
   footer,
+  paddingTopOverride,
   children,
   shouldUseScrollView = true,
-  shouldUseSafeAreaBottomPadding = true,
+  contentContainerStyle = defaultContentContainerStyle,
 }: AppScreenLayoutProps) => {
   const { background } = useAppThemedColors();
 
@@ -44,8 +47,9 @@ export const AppScreenLayout = ({
     () => ({
       flex: 1,
       paddingHorizontal: AppSize.m,
-      paddingTop: top,
-      paddingBottom: shouldUseSafeAreaBottomPadding ? bottom : undefined,
+      paddingTop: checkIsValidNumber(paddingTopOverride)
+        ? paddingTopOverride
+        : top,
       backgroundColor: background,
     }),
     [top, bottom, background],
