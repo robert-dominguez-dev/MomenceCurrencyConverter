@@ -3,7 +3,12 @@ import styled from 'styled-components/native';
 import { useAppThemedColors } from '../../../../../../hooks/useAppThemedColors.ts';
 import { CurrencyRateDeltaInfo } from '../helpers/getCurrencyRateDeltaProps.ts';
 import { formatNumber } from '../../../../../../helpers/formatNumber.ts';
-import { AppSize, DASH } from '../../../../../../constants/common.ts';
+import {
+  AppSize,
+  DASH,
+  ICONS_SIZE,
+  ICONS_STROKE_WIDTH,
+} from '../../../../../../constants/common.ts';
 import { HexColor } from '../../../../../../constants/colors.ts';
 import { CurrencyItemChart } from './CurrencyItemChart.tsx';
 import { AppText } from '../../../../../common/AppText/AppText.tsx';
@@ -40,9 +45,9 @@ const _CurrencyRateItem = ({
     maxValue,
   },
 }: CurrencyRateItemProps) => {
-  const { surface, border, accent, danger, icon } = useAppThemedColors();
+  const { surface, border, primary, danger, icon } = useAppThemedColors();
 
-  const trendColor: HexColor = isBullish ? accent : danger;
+  const trendColor: HexColor = isBullish ? primary : danger;
   const trendTextStatus: AppTextStatus = isBullish ? 'success' : 'danger';
 
   const deltaFormatted: string = deltaPercents
@@ -102,8 +107,9 @@ const _CurrencyRateItem = ({
       </RightStyled>
       <FavoriteIcon
         onPress={handleFavoriteIconPress}
-        size={AppSize.ml}
         color={icon}
+        size={ICONS_SIZE}
+        strokeWidth={ICONS_STROKE_WIDTH}
       />
     </ItemWrapperStyled>
   );

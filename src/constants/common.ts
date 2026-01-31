@@ -25,3 +25,6 @@ export const EMPTY_SPACES_REGEXP = /\s+/;
 export const ONE_HOUR_IN_MS = 3_600_000;
 
 export const LINE_BREAK_SEPARATOR = '\n';
+
+export const ICONS_STROKE_WIDTH = 2.5;
+export const ICONS_SIZE = AppSize.ml;

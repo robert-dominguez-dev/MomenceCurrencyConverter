@@ -1,6 +1,5 @@
-import React, { ReactNode, useMemo } from 'react';
-import { StatusBar, View, ViewStyle } from 'react-native';
-import styled from 'styled-components/native';
+import React, { JSX, ReactNode, useMemo } from 'react';
+import { ScrollView, StatusBar, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppSize } from '../../../constants/common.ts';
 import {
@@ -10,11 +9,20 @@ import {
 import { AppScreenFooterWrapper } from './components/AppScreenFooterWrapper.tsx';
 import { useAppThemedColors } from '../../../hooks/useAppThemedColors.ts';
 
-const contentContainerStyle: ViewStyle = { minHeight: '100%' };
+const contentStyle: ViewStyle = {
+  flex: 1,
+};
+
+const contentContainerStyle: ViewStyle = {
+  minHeight: '100%',
+  paddingTop: AppSize.m,
+  paddingBottom: AppSize.m,
+};
 
 type AppScreenLayoutProps = AppScreenHeaderProps & {
   title: string;
   footer?: ReactNode;
+  shouldUseScrollView?: boolean;
 };
 
 export const AppScreenLayout = ({
@@ -23,6 +31,7 @@ export const AppScreenLayout = ({
   headerRight,
   footer,
   children,
+  shouldUseScrollView = true,
 }: AppScreenLayoutProps) => {
   const { background } = useAppThemedColors();
 
@@ -31,13 +40,22 @@ export const AppScreenLayout = ({
   const containerStyle = useMemo<ViewStyle>(
     () => ({
       flex: 1,
-      gap: AppSize.m,
       paddingHorizontal: AppSize.m,
       paddingTop: top,
       paddingBottom: bottom,
       backgroundColor: background,
     }),
     [top, bottom, background],
+  );
+
+  const contentElement: JSX.Element = shouldUseScrollView ? (
+    <ScrollView
+      style={contentStyle}
+      contentContainerStyle={contentContainerStyle}>
+      {children}
+    </ScrollView>
+  ) : (
+    <View style={contentStyle}>{children}</View>
   );
 
   return (
@@ -52,14 +70,8 @@ export const AppScreenLayout = ({
         headerRight={headerRight}>
         {title}
       </AppScreenHeader>
-      <ContentStyled contentContainerStyle={contentContainerStyle}>
-        {children}
-      </ContentStyled>
+      {contentElement}
       {!!footer && <AppScreenFooterWrapper>{footer}</AppScreenFooterWrapper>}
     </View>
   );
 };
-
-const ContentStyled = styled.ScrollView`
-  flex: 1;
-`;
