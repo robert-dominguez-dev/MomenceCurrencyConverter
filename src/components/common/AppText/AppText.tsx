@@ -10,20 +10,23 @@ type AppTextProps = ChildrenProp &
   Pick<TextProps, 'numberOfLines'> & {
     status?: AppTextStatus;
     category?: AppTextCategory;
+    colorOverride?: string;
   };
 
 export const AppText = ({
   children,
   numberOfLines,
+  colorOverride,
   category = 'body',
   status = 'default',
 }: AppTextProps) => {
   const color = useTextStatusColor(status);
   const preset = categoryConfigMap[category];
+  const colorEvaluated: string = colorOverride || color;
 
   return (
     <BaseTextStyled
-      $color={color}
+      $color={colorEvaluated}
       $preset={preset}
       numberOfLines={numberOfLines}>
       {children}

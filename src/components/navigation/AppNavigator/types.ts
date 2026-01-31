@@ -1,9 +1,7 @@
 export enum AppNavigatorScreen {
-  RatesScreen = 'RatesScreen',
-  ConverterScreen = 'ConverterScreen',
+  TabsNavigator = 'TabsNavigator',
 }
 
 export type AppNavigatorScreenParams = {
-  [AppNavigatorScreen.RatesScreen]: undefined;
-  [AppNavigatorScreen.ConverterScreen]: undefined;
+  [AppNavigatorScreen.TabsNavigator]: undefined;
 };

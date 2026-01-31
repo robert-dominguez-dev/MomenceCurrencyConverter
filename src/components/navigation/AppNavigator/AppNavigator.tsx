@@ -1,27 +1,19 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppNavigatorScreen, AppNavigatorScreenParams } from './types.ts';
-import {
-  commonAppNavigationOptions,
-  ROOT_STACK_NAVIGATOR_ID,
-} from '../constants.tsx';
 
 import { memo } from 'react';
-import { ConverterScreen } from './screens/ConverterScreen/ConverterScreen.tsx';
-import { RatesScreen } from './screens/RatesScreen/RatesScreen.tsx';
+import { commonAppNavigationOptions } from '../constants.ts';
+import { TabsNavigator } from '../TabsNavigator/TabsNavigator.tsx';
 
 const Stack = createNativeStackNavigator<AppNavigatorScreenParams, string>();
 
 const _AppNavigator = () => (
   <Stack.Navigator
-    id={ROOT_STACK_NAVIGATOR_ID}
+    id={AppNavigator.name}
     screenOptions={commonAppNavigationOptions}>
     <Stack.Screen
-      name={AppNavigatorScreen.RatesScreen}
-      component={RatesScreen}
-    />
-    <Stack.Screen
-      name={AppNavigatorScreen.ConverterScreen}
-      component={ConverterScreen}
+      name={AppNavigatorScreen.TabsNavigator}
+      component={TabsNavigator}
     />
   </Stack.Navigator>
 );

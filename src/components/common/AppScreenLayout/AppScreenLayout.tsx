@@ -15,7 +15,6 @@ const contentStyle: ViewStyle = {
 };
 
 const contentContainerStyle: ViewStyle = {
-  minHeight: '100%',
   paddingTop: AppSize.m,
   paddingBottom: AppSize.m,
 };
@@ -24,6 +23,7 @@ type AppScreenLayoutProps = ChildrenProp &
   AppScreenHeaderProps & {
     footer?: ReactNode;
     shouldUseScrollView?: boolean;
+    shouldUseSafeAreaBottomPadding?: boolean;
   };
 
 export const AppScreenLayout = ({
@@ -34,6 +34,7 @@ export const AppScreenLayout = ({
   footer,
   children,
   shouldUseScrollView = true,
+  shouldUseSafeAreaBottomPadding = true,
 }: AppScreenLayoutProps) => {
   const { background } = useAppThemedColors();
 
@@ -44,7 +45,7 @@ export const AppScreenLayout = ({
       flex: 1,
       paddingHorizontal: AppSize.m,
       paddingTop: top,
-      paddingBottom: bottom,
+      paddingBottom: shouldUseSafeAreaBottomPadding ? bottom : undefined,
       backgroundColor: background,
     }),
     [top, bottom, background],
@@ -57,7 +58,9 @@ export const AppScreenLayout = ({
       {children}
     </ScrollView>
   ) : (
-    <View style={contentStyle}>{children}</View>
+    <View style={{ ...contentStyle, ...contentContainerStyle }}>
+      {children}
+    </View>
   );
 
   return (

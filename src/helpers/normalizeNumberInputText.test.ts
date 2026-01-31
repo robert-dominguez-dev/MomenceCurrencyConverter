@@ -18,6 +18,7 @@ describe('normalizeNumberInputText', () => {
     ['123.', '123.'],
     ['123.456.', '123.456'],
     ['123,456,', '123.456'],
+    ['123,45dsAS=6 ,', '123.456'],
   ])('should normalize input "%s" to "%s"', (input, expected) => {
     const output = normalizeNumberInputText(input);
     expect(output).toBe(expected);

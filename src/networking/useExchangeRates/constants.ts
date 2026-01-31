@@ -7,6 +7,7 @@ export const CNB_DATE_FORMAT = 'dd.MM.yyyy';
  * Based on {@link https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/}
  */
 export enum CnbCurrencyCode {
+  CZK = 'CZK',
   AUD = 'AUD',
   BRL = 'BRL',
   CAD = 'CAD',
@@ -40,6 +41,7 @@ export enum CnbCurrencyCode {
 }
 
 export const currencyCodeToFlagEmojiMap: Record<CnbCurrencyCode, string> = {
+  [CnbCurrencyCode.CZK]: '🇨🇿',
   [CnbCurrencyCode.AUD]: '🇦🇺',
   [CnbCurrencyCode.BRL]: '🇧🇷',
   [CnbCurrencyCode.CAD]: '🇨🇦',

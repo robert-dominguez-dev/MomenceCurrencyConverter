@@ -16,6 +16,8 @@ const testCases: TestCase[] = [
     expectedOutput: {
       first: 10,
       last: 12,
+      minValue: 10,
+      maxValue: 12,
       delta: 2,
       deltaPercents: 20,
       isBullish: true,
@@ -27,6 +29,8 @@ const testCases: TestCase[] = [
     expectedOutput: {
       first: 12,
       last: 10,
+      minValue: 10,
+      maxValue: 12,
       delta: -2,
       deltaPercents: -16.666666666666664,
       isBullish: false,
@@ -38,6 +42,8 @@ const testCases: TestCase[] = [
     expectedOutput: {
       first: 0,
       last: 10,
+      minValue: 0,
+      maxValue: 10,
       delta: 10,
       deltaPercents: 0,
       isBullish: true,
@@ -49,6 +55,8 @@ const testCases: TestCase[] = [
     expectedOutput: {
       first: 10,
       last: 10,
+      minValue: 10,
+      maxValue: 10,
       delta: 0,
       deltaPercents: 0,
       isBullish: true,
